@@ -20,18 +20,22 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 26%;
 
-    /* Brand Primary - Deep Blue */
-    --primary: 217 55% 22%; /* #1A2F5A */
+    /* Brand Primary - Deep Blue (from logo) */
+    --primary: 217 60% 25%; /* Darker blue from logo */
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 217 55% 28%;
+    --primary-hover: 217 60% 32%;
     
-    /* Success/In-Stock - Green */
-    --secondary: 122 39% 49%; /* #4CAF50 */
+    /* Success/In-Stock - Vibrant Green (from logo) */
+    --secondary: 122 50% 50%; /* #4CAF50 - mais vibrante */
     --secondary-foreground: 0 0% 100%;
     
     /* AI Differentiator - Bright Blue */
     --accent: 199 98% 48%; /* #03A9F4 */
     --accent-foreground: 0 0% 100%;
+    
+    /* Logo accent green - usado para destaques especiais */
+    --logo-green: 122 55% 55%;
+    --logo-blue: 217 65% 30%;
     
     /* Text Colors */
     --muted: 0 0% 96%;
@@ -52,14 +56,19 @@ All colors MUST be HSL.
     --radius: 0.5rem;
 
     /* Sidebar specific */
-    --sidebar-background: 217 55% 22%;
+    --sidebar-background: 217 60% 25%;
     --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 217 55% 28%;
+    --sidebar-primary: 217 60% 32%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 217 55% 28%;
+    --sidebar-accent: 122 50% 50%;
     --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 217 55% 18%;
-    --sidebar-ring: 217 55% 22%;
+    --sidebar-border: 217 60% 20%;
+    --sidebar-ring: 217 60% 25%;
+    
+    /* AI Chat specific */
+    --ai-chat-background: 0 0% 98%;
+    --ai-chat-user: 217 60% 25%;
+    --ai-chat-assistant: 122 50% 50%;
   }
 }
 

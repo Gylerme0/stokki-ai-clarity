@@ -62,6 +62,8 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        "logo-green": "hsl(var(--logo-green))",
+        "logo-blue": "hsl(var(--logo-blue))",
       },
       fontFamily: {
         sans: ['Roboto', 'sans-serif'],

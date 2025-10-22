@@ -1,9 +1,12 @@
+import { useState } from "react";
 import { Sidebar } from "@/components/Sidebar";
 import { Header } from "@/components/Header";
 import { KPICard } from "@/components/KPICard";
 import { ActionButton } from "@/components/ActionButton";
 import { AlertCard } from "@/components/AlertCard";
 import { QuickReportLink } from "@/components/QuickReportLink";
+import { AIChatPanel } from "@/components/AIChatPanel";
+import { FeatureSuggestionCard } from "@/components/FeatureSuggestionCard";
 import { 
   DollarSign, 
   AlertTriangle, 
@@ -18,12 +21,23 @@ import {
   Package,
   AlertCircle,
   Lightbulb,
+  Calendar,
+  QrCode,
+  Bell,
+  LineChart,
+  Smartphone,
+  Truck,
 } from "lucide-react";
 
 const Index = () => {
+  const [isAIChatOpen, setIsAIChatOpen] = useState(false);
+
   return (
     <div className="flex min-h-screen bg-background">
-      <Sidebar activeItem="dashboard" />
+      <Sidebar 
+        activeItem="dashboard" 
+        onAIChatToggle={() => setIsAIChatOpen(!isAIChatOpen)}
+      />
       
       <div className="flex-1 ml-64">
         <Header title="Dashboard" />
@@ -106,6 +120,49 @@ const Index = () => {
                 />
               </div>
             </section>
+
+            {/* Future Features Section */}
+            <section className="space-y-4">
+              <h2 className="text-[20px] font-medium text-foreground">Funcionalidades Futuras</h2>
+              <div className="grid grid-cols-2 gap-4">
+                <FeatureSuggestionCard
+                  icon={Calendar}
+                  title="Previsão de Demanda"
+                  description="IA prevê demanda futura baseada em histórico e sazonalidade"
+                  status="soon"
+                />
+                <FeatureSuggestionCard
+                  icon={QrCode}
+                  title="Etiquetas QR Code"
+                  description="Geração automática de etiquetas para rastreamento"
+                  status="beta"
+                />
+                <FeatureSuggestionCard
+                  icon={Bell}
+                  title="Alertas Personalizados"
+                  description="Configure notificações customizadas por item ou categoria"
+                  status="soon"
+                />
+                <FeatureSuggestionCard
+                  icon={LineChart}
+                  title="Análise Preditiva"
+                  description="Identifica tendências e oportunidades de otimização"
+                  status="new"
+                />
+                <FeatureSuggestionCard
+                  icon={Smartphone}
+                  title="App Mobile"
+                  description="Gestão de estoque direto do celular ou tablet"
+                  status="soon"
+                />
+                <FeatureSuggestionCard
+                  icon={Truck}
+                  title="Integração com Transportadoras"
+                  description="Rastreamento automático de entregas e recebimentos"
+                  status="beta"
+                />
+              </div>
+            </section>
           </main>
 
           {/* AI Action Feed Panel - Right Column */}
@@ -140,6 +197,9 @@ const Index = () => {
           </aside>
         </div>
       </div>
+
+      {/* AI Chat Panel */}
+      <AIChatPanel isOpen={isAIChatOpen} onClose={() => setIsAIChatOpen(false)} />
     </div>
   );
 };
