@@ -1,34 +1,15 @@
 import { 
   LayoutDashboard, 
-  Package, 
   ArrowLeftRight, 
+  ClipboardList, 
   BarChart3, 
-  Settings, 
-  Sparkles,
-  ChevronDown,
-  ChevronRight,
-  FileText,
-  Users,
-  MapPin,
-  Truck,
-  Building2,
-  FolderTree,
-  PackagePlus,
-  PackageMinus,
-  ClipboardCheck,
-  ClipboardList,
-  ScanLine,
-  MapPinned,
-  SearchCheck
+  Package, 
+  ShieldCheck, 
+  Sparkles
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import stokkiLogo from "@/assets/stokki-logo.png";
-import { useState } from "react";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+import { Link, useLocation } from "react-router-dom";
 
 interface SidebarProps {
   activeItem?: string;
@@ -39,120 +20,29 @@ interface NavItem {
   id: string;
   label: string;
   icon: any;
-  children?: NavItem[];
+  path: string;
 }
 
 const navItems: NavItem[] = [
-  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { 
-    id: "cadastros", 
-    label: "Cadastros", 
-    icon: FileText,
-    children: [
-      { id: "cadastro-produtos", label: "Produtos", icon: Package },
-      { id: "cadastro-usuarios", label: "Usuários", icon: Users },
-      { id: "cadastro-enderecos", label: "Endereços", icon: MapPin },
-      { id: "cadastro-fornecedores", label: "Fornecedores", icon: Truck },
-      { id: "cadastro-categorias", label: "Categorias", icon: FolderTree },
-    ]
-  },
-  { 
-    id: "movimentacoes", 
-    label: "Movimentações", 
-    icon: ArrowLeftRight,
-    children: [
-      { id: "entrada-mercadorias", label: "Entrada de Mercadorias", icon: PackagePlus },
-      { id: "saida-mercadorias", label: "Saída de Mercadorias", icon: PackageMinus },
-      { id: "conferencia-entrada", label: "Conferência de Entrada", icon: ClipboardCheck },
-      { id: "conferencia-saida", label: "Conferência de Saída", icon: ClipboardList },
-      { id: "transferencias", label: "Transferências", icon: ArrowLeftRight },
-    ]
-  },
-  { 
-    id: "inventario", 
-    label: "Inventário", 
-    icon: ScanLine,
-    children: [
-      { id: "contagem-estoque", label: "Contagem de Estoque", icon: ClipboardCheck },
-      { id: "enderecamento", label: "Endereçamento", icon: MapPinned },
-      { id: "verificar-enderecamento", label: "Verificar Endereçamento", icon: SearchCheck },
-      { id: "posicao-estoque", label: "Posição de Estoque", icon: Package },
-    ]
-  },
-  { id: "relatorios", label: "Relatórios", icon: BarChart3 },
-  { id: "configuracoes", label: "Configurações", icon: Settings },
+  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, path: "/" },
+  { id: "movimentacoes", label: "Movimentações", icon: ArrowLeftRight, path: "/movimentacoes" },
+  { id: "ordens", label: "Ordens de Separação", icon: ClipboardList, path: "/ordens" },
+  { id: "relatorios", label: "Relatórios", icon: BarChart3, path: "/relatorios" },
+  { id: "cadastros", label: "Cadastros", icon: Package, path: "/cadastros" },
+  { id: "administracao", label: "Administração", icon: ShieldCheck, path: "/administracao" },
 ];
 
-export const Sidebar = ({ activeItem = "dashboard", onAIChatToggle }: SidebarProps) => {
-  const [openMenus, setOpenMenus] = useState<string[]>(["movimentacoes", "inventario"]);
-
-  const toggleMenu = (menuId: string) => {
-    setOpenMenus(prev => 
-      prev.includes(menuId) 
-        ? prev.filter(id => id !== menuId)
-        : [...prev, menuId]
-    );
-  };
+export const Sidebar = ({ onAIChatToggle }: SidebarProps) => {
+  const location = useLocation();
 
   const renderNavItem = (item: NavItem) => {
     const Icon = item.icon;
-    const isActive = item.id === activeItem;
-    const hasChildren = item.children && item.children.length > 0;
-    const isOpen = openMenus.includes(item.id);
-
-    if (hasChildren) {
-      return (
-        <Collapsible
-          key={item.id}
-          open={isOpen}
-          onOpenChange={() => toggleMenu(item.id)}
-        >
-          <CollapsibleTrigger asChild>
-            <button
-              className={cn(
-                "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-sidebar-foreground",
-                isActive 
-                  ? "bg-sidebar-accent font-medium" 
-                  : "hover:bg-sidebar-primary/50"
-              )}
-            >
-              <Icon className="h-5 w-5 flex-shrink-0" />
-              <span className="text-sm flex-1 text-left">{item.label}</span>
-              {isOpen ? (
-                <ChevronDown className="h-4 w-4 flex-shrink-0" />
-              ) : (
-                <ChevronRight className="h-4 w-4 flex-shrink-0" />
-              )}
-            </button>
-          </CollapsibleTrigger>
-          <CollapsibleContent className="space-y-1 mt-1">
-            {item.children?.map((child) => {
-              const ChildIcon = child.icon;
-              const isChildActive = child.id === activeItem;
-              
-              return (
-                <button
-                  key={child.id}
-                  className={cn(
-                    "w-full flex items-center gap-3 pl-12 pr-4 py-2.5 rounded-lg transition-colors text-sidebar-foreground",
-                    isChildActive 
-                      ? "bg-sidebar-accent font-medium" 
-                      : "hover:bg-sidebar-primary/50"
-                  )}
-                >
-                  <ChildIcon className="h-4 w-4 flex-shrink-0" />
-                  <span className="text-sm">{child.label}</span>
-                </button>
-              );
-            })}
-          </CollapsibleContent>
-        </Collapsible>
-      );
-    }
+    const isActive = location.pathname === item.path;
 
     return (
-      <button
+      <Link
         key={item.id}
+        to={item.path}
         className={cn(
           "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-sidebar-foreground",
           isActive 
@@ -162,7 +52,7 @@ export const Sidebar = ({ activeItem = "dashboard", onAIChatToggle }: SidebarPro
       >
         <Icon className="h-5 w-5 flex-shrink-0" />
         <span className="text-sm">{item.label}</span>
-      </button>
+      </Link>
     );
   };
 

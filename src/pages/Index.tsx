@@ -3,95 +3,83 @@ import { Sidebar } from "@/components/Sidebar";
 import { Header } from "@/components/Header";
 import { KPICard } from "@/components/KPICard";
 import { ActionButton } from "@/components/ActionButton";
-import { AlertCard } from "@/components/AlertCard";
-import { QuickReportLink } from "@/components/QuickReportLink";
 import { AIChatPanel } from "@/components/AIChatPanel";
-import { FeatureSuggestionCard } from "@/components/FeatureSuggestionCard";
-import { 
-  DollarSign, 
-  AlertTriangle, 
-  XCircle, 
-  Target,
-  Plus,
-  TrendingUp,
-  ClipboardCheck,
-  ArrowLeftRight,
-  BarChart3,
-  TrendingDown,
-  Package,
-  AlertCircle,
-  Lightbulb,
-  Calendar,
-  QrCode,
-  Bell,
-  LineChart,
-  Smartphone,
-  Truck,
-} from "lucide-react";
+import { Package, AlertTriangle, XCircle, Target, PackagePlus, PackageMinus, ArrowLeftRight, ClipboardList } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 
-const Index = () => {
+export default function Index() {
   const [isAIChatOpen, setIsAIChatOpen] = useState(false);
+
+  const recentOrders = [
+    { id: "OS-001", status: "Pendente", date: "29/10/2025", client: "Cliente A" },
+    { id: "OS-002", status: "Em Separação", date: "29/10/2025", client: "Cliente B" },
+    { id: "OS-003", status: "Separado", date: "28/10/2025", client: "Cliente C" },
+    { id: "OS-004", status: "Pendente", date: "28/10/2025", client: "Cliente D" },
+    { id: "OS-005", status: "Em Separação", date: "27/10/2025", client: "Cliente E" },
+  ];
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "Pendente": return "warning";
+      case "Em Separação": return "default";
+      case "Separado": return "secondary";
+      default: return "default";
+    }
+  };
 
   return (
     <div className="flex min-h-screen bg-background">
-      <Sidebar 
-        activeItem="dashboard" 
-        onAIChatToggle={() => setIsAIChatOpen(!isAIChatOpen)}
-      />
+      <Sidebar onAIChatToggle={() => setIsAIChatOpen(!isAIChatOpen)} />
       
       <div className="flex-1 ml-64">
         <Header title="Dashboard" />
         
-        <div className="flex gap-6 p-8">
-          {/* Main Dashboard Panel - Center Column */}
-          <main className="flex-1 space-y-8">
-            {/* KPI Section */}
-            <section>
-              <div className="grid grid-cols-2 gap-4">
-                <KPICard
-                  title="Valor do Inventário"
-                  value="R$ 150.432,00"
-                  icon={DollarSign}
-                  variant="default"
-                />
-                <KPICard
-                  title="Itens em Alerta"
-                  value="15 Itens"
-                  icon={AlertTriangle}
-                  variant="warning"
-                />
-                <KPICard
-                  title="Itens Esgotados"
-                  value="3 Itens"
-                  icon={XCircle}
-                  variant="error"
-                />
-                <KPICard
-                  title="Acuracidade Média"
-                  value="99.2%"
-                  icon={Target}
-                  variant="success"
-                />
-              </div>
-            </section>
+        <main className="p-8">
+          {/* KPIs */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <KPICard
+              title="Valor Total do Inventário"
+              value="R$ 150.432,00"
+              icon={Package}
+              variant="default"
+            />
+            <KPICard
+              title="Itens em Alerta"
+              value="12 Itens"
+              icon={AlertTriangle}
+              variant="warning"
+            />
+            <KPICard
+              title="Itens Esgotados"
+              value="3 Itens"
+              icon={XCircle}
+              variant="error"
+            />
+            <KPICard
+              title="Ordens Pendentes"
+              value="5 Ordens"
+              icon={Target}
+              variant="default"
+            />
+          </div>
 
-            {/* Quick Actions Section */}
-            <section className="space-y-4">
-              <h2 className="text-[20px] font-medium text-foreground">Ações Rápidas</h2>
-              <div className="grid grid-cols-2 gap-3">
+          {/* Ações Rápidas */}
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle>Ações Rápidas</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <ActionButton
-                  label="Receber Mercadoria"
-                  icon={Plus}
+                  label="Registrar Entrada"
+                  icon={PackagePlus}
                   variant="primary"
                 />
                 <ActionButton
                   label="Registrar Saída"
-                  icon={TrendingUp}
-                  variant="primary"
-                />
-                <ActionButton
-                  label="Realizar Contagem"
-                  icon={ClipboardCheck}
+                  icon={PackageMinus}
                   variant="secondary"
                 />
                 <ActionButton
@@ -99,109 +87,53 @@ const Index = () => {
                   icon={ArrowLeftRight}
                   variant="secondary"
                 />
-              </div>
-            </section>
-
-            {/* Quick Reports Section */}
-            <section className="space-y-4">
-              <h2 className="text-[20px] font-medium text-foreground">Análises Gerenciais</h2>
-              <div className="space-y-3">
-                <QuickReportLink
-                  label="Análise de Curva ABC"
-                  icon={BarChart3}
-                />
-                <QuickReportLink
-                  label="Análise de Giro de Estoque"
-                  icon={TrendingDown}
-                />
-                <QuickReportLink
-                  label="Posição de Estoque Completa"
-                  icon={Package}
+                <ActionButton
+                  label="Nova Ordem"
+                  icon={ClipboardList}
+                  variant="primary"
                 />
               </div>
-            </section>
+            </CardContent>
+          </Card>
 
-            {/* Future Features Section */}
-            <section className="space-y-4">
-              <h2 className="text-[20px] font-medium text-foreground">Funcionalidades Futuras</h2>
-              <div className="grid grid-cols-2 gap-4">
-                <FeatureSuggestionCard
-                  icon={Calendar}
-                  title="Previsão de Demanda"
-                  description="IA prevê demanda futura baseada em histórico e sazonalidade"
-                  status="soon"
-                />
-                <FeatureSuggestionCard
-                  icon={QrCode}
-                  title="Etiquetas QR Code"
-                  description="Geração automática de etiquetas para rastreamento"
-                  status="beta"
-                />
-                <FeatureSuggestionCard
-                  icon={Bell}
-                  title="Alertas Personalizados"
-                  description="Configure notificações customizadas por item ou categoria"
-                  status="soon"
-                />
-                <FeatureSuggestionCard
-                  icon={LineChart}
-                  title="Análise Preditiva"
-                  description="Identifica tendências e oportunidades de otimização"
-                  status="new"
-                />
-                <FeatureSuggestionCard
-                  icon={Smartphone}
-                  title="App Mobile"
-                  description="Gestão de estoque direto do celular ou tablet"
-                  status="soon"
-                />
-                <FeatureSuggestionCard
-                  icon={Truck}
-                  title="Integração com Transportadoras"
-                  description="Rastreamento automático de entregas e recebimentos"
-                  status="beta"
-                />
-              </div>
-            </section>
-          </main>
-
-          {/* AI Action Feed Panel - Right Column */}
-          <aside className="w-96 space-y-6">
-            <h2 className="text-[20px] font-medium text-foreground">Alertas e Ações (IA)</h2>
-            
-            <div className="space-y-4">
-              <AlertCard
-                title="Estoque Mínimo Atingido"
-                description="O item 'Parafuso M8' (50 un) atingiu o estoque mínimo de 50 un."
-                icon={AlertTriangle}
-                variant="warning"
-                actionLabel="Sugerir Pedido de Compra"
-              />
-
-              <AlertCard
-                title="Guardião de Validade (IA)"
-                description="O Lote #1234 (Leite) vence em 10 dias. O giro médio é de 30 dias. Alto risco de perda."
-                icon={Lightbulb}
-                variant="ai"
-                actionLabel="Sugerir Promoção / Ação"
-              />
-
-              <AlertCard
-                title="Ruptura de Estoque"
-                description="O item 'Produto X' está zerado. 3 pedidos foram afetados."
-                icon={AlertCircle}
-                variant="error"
-                actionLabel="Ver Pedidos Afetados"
-              />
-            </div>
-          </aside>
-        </div>
+          {/* Monitor de Ordens */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Monitor de Ordens</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Nº Ordem</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Data</TableHead>
+                    <TableHead>Cliente</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {recentOrders.map((order) => (
+                    <TableRow key={order.id}>
+                      <TableCell className="font-medium">{order.id}</TableCell>
+                      <TableCell>
+                        <Badge variant={getStatusColor(order.status) as any}>
+                          {order.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>{order.date}</TableCell>
+                      <TableCell>{order.client}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </main>
       </div>
 
-      {/* AI Chat Panel */}
-      <AIChatPanel isOpen={isAIChatOpen} onClose={() => setIsAIChatOpen(false)} />
+      {isAIChatOpen && (
+        <AIChatPanel isOpen={isAIChatOpen} onClose={() => setIsAIChatOpen(false)} />
+      )}
     </div>
   );
-};
-
-export default Index;
+}
