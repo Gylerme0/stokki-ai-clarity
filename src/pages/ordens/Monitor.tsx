@@ -13,6 +13,7 @@ export default function Monitor() {
   
   const orders = [
     { id: "OS-001", status: "Pendente", date: "29/10/2025", client: "Cliente A", items: 5 },
+    { id: "OS-154", status: "Em Separação", date: "29/10/2025", client: "Cliente Doido", items: 8 },
     { id: "OS-002", status: "Em Separação", date: "29/10/2025", client: "Cliente B", items: 8 },
     { id: "OS-003", status: "Separado", date: "28/10/2025", client: "Cliente C", items: 3 },
     { id: "OS-004", status: "Pendente", date: "28/10/2025", client: "Cliente D", items: 12 },
