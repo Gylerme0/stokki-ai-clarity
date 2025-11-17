@@ -3,6 +3,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import CadastrosHub from "./pages/CadastrosHub";
@@ -38,45 +40,47 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/" element={<Index />} />
+        <AuthProvider>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
           
-          {/* Cadastros */}
-          <Route path="/cadastros" element={<CadastrosHub />} />
-          <Route path="/cadastros/materiais" element={<Materiais />} />
-          <Route path="/cadastros/fornecedores" element={<Fornecedores />} />
-          <Route path="/cadastros/enderecos" element={<Enderecos />} />
-          <Route path="/cadastros/categorias" element={<Categorias />} />
-          <Route path="/cadastros/unidades" element={<Unidades />} />
-          
-          {/* Movimentações */}
-          <Route path="/movimentacoes" element={<MovimentacoesHub />} />
-          <Route path="/movimentacoes/entrada" element={<Entrada />} />
-          <Route path="/movimentacoes/saida" element={<Saida />} />
-          <Route path="/movimentacoes/transferencia" element={<Transferencia />} />
-          <Route path="/movimentacoes/ajuste" element={<Ajuste />} />
-          
-          {/* Ordens */}
-          <Route path="/ordens" element={<OrdensHub />} />
-          <Route path="/ordens/monitor" element={<Monitor />} />
-          <Route path="/ordens/criar" element={<Criar />} />
-          <Route path="/ordens/lista" element={<Lista />} />
-          
-          {/* Relatórios */}
-          <Route path="/relatorios" element={<RelatoriosHub />} />
-          <Route path="/relatorios/estoque" element={<Estoque />} />
-          <Route path="/relatorios/rastreabilidade" element={<Rastreabilidade />} />
-          <Route path="/relatorios/curva-abc" element={<CurvaABC />} />
-          <Route path="/relatorios/giro" element={<Giro />} />
-          
-          {/* Administração */}
-          <Route path="/administracao" element={<AdministracaoHub />} />
-          <Route path="/administracao/usuarios" element={<Usuarios />} />
-          <Route path="/administracao/auditoria" element={<Auditoria />} />
-          
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+            {/* Cadastros */}
+            <Route path="/cadastros" element={<ProtectedRoute><CadastrosHub /></ProtectedRoute>} />
+            <Route path="/cadastros/materiais" element={<ProtectedRoute><Materiais /></ProtectedRoute>} />
+            <Route path="/cadastros/fornecedores" element={<ProtectedRoute><Fornecedores /></ProtectedRoute>} />
+            <Route path="/cadastros/enderecos" element={<ProtectedRoute><Enderecos /></ProtectedRoute>} />
+            <Route path="/cadastros/categorias" element={<ProtectedRoute><Categorias /></ProtectedRoute>} />
+            <Route path="/cadastros/unidades" element={<ProtectedRoute><Unidades /></ProtectedRoute>} />
+            
+            {/* Movimentações */}
+            <Route path="/movimentacoes" element={<ProtectedRoute><MovimentacoesHub /></ProtectedRoute>} />
+            <Route path="/movimentacoes/entrada" element={<ProtectedRoute><Entrada /></ProtectedRoute>} />
+            <Route path="/movimentacoes/saida" element={<ProtectedRoute><Saida /></ProtectedRoute>} />
+            <Route path="/movimentacoes/transferencia" element={<ProtectedRoute><Transferencia /></ProtectedRoute>} />
+            <Route path="/movimentacoes/ajuste" element={<ProtectedRoute><Ajuste /></ProtectedRoute>} />
+            
+            {/* Ordens */}
+            <Route path="/ordens" element={<ProtectedRoute><OrdensHub /></ProtectedRoute>} />
+            <Route path="/ordens/monitor" element={<ProtectedRoute><Monitor /></ProtectedRoute>} />
+            <Route path="/ordens/criar" element={<ProtectedRoute><Criar /></ProtectedRoute>} />
+            <Route path="/ordens/lista" element={<ProtectedRoute><Lista /></ProtectedRoute>} />
+            
+            {/* Relatórios */}
+            <Route path="/relatorios" element={<ProtectedRoute><RelatoriosHub /></ProtectedRoute>} />
+            <Route path="/relatorios/estoque" element={<ProtectedRoute><Estoque /></ProtectedRoute>} />
+            <Route path="/relatorios/rastreabilidade" element={<ProtectedRoute><Rastreabilidade /></ProtectedRoute>} />
+            <Route path="/relatorios/curva-abc" element={<ProtectedRoute><CurvaABC /></ProtectedRoute>} />
+            <Route path="/relatorios/giro" element={<ProtectedRoute><Giro /></ProtectedRoute>} />
+            
+            {/* Administração */}
+            <Route path="/administracao" element={<ProtectedRoute><AdministracaoHub /></ProtectedRoute>} />
+            <Route path="/administracao/usuarios" element={<ProtectedRoute><Usuarios /></ProtectedRoute>} />
+            <Route path="/administracao/auditoria" element={<ProtectedRoute><Auditoria /></ProtectedRoute>} />
+            
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
