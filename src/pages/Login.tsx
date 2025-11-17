@@ -6,21 +6,28 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import stokkiLogo from "@/assets/stokki-logo.png";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Simulação de login
-    if (email && password) {
+    if (!email || !password) {
+      toast.error("Preencha todos os campos");
+      return;
+    }
+
+    const success = await login(email, password);
+    if (success) {
       toast.success("Login realizado com sucesso!");
       navigate("/");
     } else {
-      toast.error("Preencha todos os campos");
+      toast.error("Credenciais inválidas");
     }
   };
 
