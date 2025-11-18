@@ -89,26 +89,33 @@ export const AIChatPanel = ({ isOpen, onClose }: AIChatPanelProps) => {
         ))}
       </div>
 
-      {/* Suggestions */}
-      <div className="px-4 pb-2">
-        <div className="flex gap-2 overflow-x-auto pb-2">
+      {/* Suggestion Chips */}
+      <div className="px-4 pb-3 border-t border-border bg-muted/30">
+        <p className="text-xs text-muted-foreground mb-2 mt-3 font-medium">Sugestões:</p>
+        <div className="flex flex-wrap gap-2">
           <button
-            onClick={() => setInput("Relatório de estoque")}
-            className="px-3 py-1.5 text-xs bg-secondary/10 hover:bg-secondary/20 text-foreground rounded-full whitespace-nowrap transition-colors"
+            onClick={() => setInput("Mostre o relatório de estoque completo")}
+            className="px-3 py-1.5 text-xs bg-background border border-border hover:border-accent hover:bg-accent/10 text-foreground rounded-full whitespace-nowrap transition-all shadow-sm"
           >
-            📊 Relatório
+            📊 Ver relatório de estoque
           </button>
           <button
-            onClick={() => setInput("Estoque baixo")}
-            className="px-3 py-1.5 text-xs bg-secondary/10 hover:bg-secondary/20 text-foreground rounded-full whitespace-nowrap transition-colors"
+            onClick={() => setInput("Quais itens estão com estoque baixo?")}
+            className="px-3 py-1.5 text-xs bg-background border border-border hover:border-accent hover:bg-accent/10 text-foreground rounded-full whitespace-nowrap transition-all shadow-sm"
           >
-            📦 Estoque baixo
+            📦 Itens com estoque baixo
           </button>
           <button
-            onClick={() => setInput("Análise mensal")}
-            className="px-3 py-1.5 text-xs bg-secondary/10 hover:bg-secondary/20 text-foreground rounded-full whitespace-nowrap transition-colors"
+            onClick={() => setInput("Análise de movimentações do mês")}
+            className="px-3 py-1.5 text-xs bg-background border border-border hover:border-accent hover:bg-accent/10 text-foreground rounded-full whitespace-nowrap transition-all shadow-sm"
           >
-            📈 Análise
+            📈 Análise mensal
+          </button>
+          <button
+            onClick={() => setInput("Itens próximos ao vencimento")}
+            className="px-3 py-1.5 text-xs bg-background border border-border hover:border-accent hover:bg-accent/10 text-foreground rounded-full whitespace-nowrap transition-all shadow-sm"
+          >
+            ⚠️ Próximos ao vencimento
           </button>
         </div>
       </div>
