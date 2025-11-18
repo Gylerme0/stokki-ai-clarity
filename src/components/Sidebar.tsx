@@ -25,6 +25,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, path: "/" },
+  { id: "ai-assistant", label: "Assistente IA", icon: Sparkles, path: "/assistente-ia" },
   { id: "movimentacoes", label: "Movimentações", icon: ArrowLeftRight, path: "/movimentacoes" },
   { id: "ordens", label: "Ordens de Separação", icon: ClipboardList, path: "/ordens" },
   { id: "relatorios", label: "Relatórios", icon: BarChart3, path: "/relatorios" },
@@ -76,16 +77,6 @@ export const Sidebar = ({ onAIChatToggle }: SidebarProps) => {
         </ul>
       </nav>
 
-      {/* AI Chat Toggle Button */}
-      <div className="mt-auto p-4 border-t border-sidebar-border">
-        <button
-          onClick={onAIChatToggle}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors bg-sidebar-accent text-sidebar-accent-foreground hover:opacity-90"
-        >
-          <Sparkles className="h-5 w-5" />
-          <span className="text-sm font-medium">Assistente IA</span>
-        </button>
-      </div>
     </aside>
   );
 };
