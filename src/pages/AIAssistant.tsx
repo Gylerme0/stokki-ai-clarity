@@ -300,41 +300,46 @@ export default function AIAssistant() {
               </div>
             </ScrollArea>
 
-            {/* Suggestions */}
-            <div className="border-t border-border px-4 py-3">
-              <div className="flex gap-2 overflow-x-auto">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="text-xs whitespace-nowrap"
-                  onClick={() => setInput("Mostre o relatório de estoque")}
+            {/* Suggestion Chips */}
+            <div className="border-t border-border px-4 py-3 bg-muted/30">
+              <p className="text-xs text-muted-foreground mb-2 font-medium">Sugestões para você:</p>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => setInput("Mostre o relatório de estoque completo")}
+                  className="px-3 py-1.5 text-xs bg-background border border-border hover:border-accent hover:bg-accent/10 text-foreground rounded-full transition-all shadow-sm"
                 >
-                  📊 Ver Relatórios
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="text-xs whitespace-nowrap"
+                  📊 Ver relatório de estoque
+                </button>
+                <button
                   onClick={() => setInput("Quais itens estão com estoque baixo?")}
+                  className="px-3 py-1.5 text-xs bg-background border border-border hover:border-accent hover:bg-accent/10 text-foreground rounded-full transition-all shadow-sm"
                 >
-                  📦 Estoque Baixo
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="text-xs whitespace-nowrap"
+                  📦 Itens com estoque baixo
+                </button>
+                <button
                   onClick={() => setInput("Analisar movimentações do mês")}
+                  className="px-3 py-1.5 text-xs bg-background border border-border hover:border-accent hover:bg-accent/10 text-foreground rounded-full transition-all shadow-sm"
                 >
-                  📈 Análise Mensal
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="text-xs whitespace-nowrap"
+                  📈 Análise de movimentações
+                </button>
+                <button
                   onClick={() => setInput("Itens próximos ao vencimento")}
+                  className="px-3 py-1.5 text-xs bg-background border border-border hover:border-accent hover:bg-accent/10 text-foreground rounded-full transition-all shadow-sm"
                 >
-                  ⚠️ Vencimentos
-                </Button>
+                  ⚠️ Próximos ao vencimento
+                </button>
+                <button
+                  onClick={() => setInput("Sugerir pedido de compra")}
+                  className="px-3 py-1.5 text-xs bg-background border border-border hover:border-accent hover:bg-accent/10 text-foreground rounded-full transition-all shadow-sm"
+                >
+                  🛒 Sugerir compras
+                </button>
+                <button
+                  onClick={() => setInput("Análise de Curva ABC")}
+                  className="px-3 py-1.5 text-xs bg-background border border-border hover:border-accent hover:bg-accent/10 text-foreground rounded-full transition-all shadow-sm"
+                >
+                  📊 Curva ABC
+                </button>
               </div>
             </div>
 
