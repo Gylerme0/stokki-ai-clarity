@@ -273,26 +273,6 @@ export default function AIAssistant() {
             </div>
           </div>
 
-          {/* Quick Actions */}
-          <div className="grid grid-cols-4 gap-3 mb-6">
-            <Button variant="outline" className="justify-start gap-2" onClick={() => setInput("Mostre o relatório de estoque")}>
-              <BarChart3 className="h-4 w-4" />
-              <span className="text-xs">Ver Relatórios</span>
-            </Button>
-            <Button variant="outline" className="justify-start gap-2" onClick={() => setInput("Quais itens estão com estoque baixo?")}>
-              <Package className="h-4 w-4" />
-              <span className="text-xs">Estoque Baixo</span>
-            </Button>
-            <Button variant="outline" className="justify-start gap-2" onClick={() => setInput("Analisar movimentações do mês")}>
-              <TrendingUp className="h-4 w-4" />
-              <span className="text-xs">Análise Mensal</span>
-            </Button>
-            <Button variant="outline" className="justify-start gap-2" onClick={() => setInput("Itens próximos ao vencimento")}>
-              <AlertCircle className="h-4 w-4" />
-              <span className="text-xs">Vencimentos</span>
-            </Button>
-          </div>
-
           {/* Chat Area */}
           <Card className="flex-1 flex flex-col overflow-hidden">
             <ScrollArea className="flex-1 p-6">
@@ -320,6 +300,44 @@ export default function AIAssistant() {
               </div>
             </ScrollArea>
 
+            {/* Suggestions */}
+            <div className="border-t border-border px-4 py-3">
+              <div className="flex gap-2 overflow-x-auto">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-xs whitespace-nowrap"
+                  onClick={() => setInput("Mostre o relatório de estoque")}
+                >
+                  📊 Ver Relatórios
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-xs whitespace-nowrap"
+                  onClick={() => setInput("Quais itens estão com estoque baixo?")}
+                >
+                  📦 Estoque Baixo
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-xs whitespace-nowrap"
+                  onClick={() => setInput("Analisar movimentações do mês")}
+                >
+                  📈 Análise Mensal
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-xs whitespace-nowrap"
+                  onClick={() => setInput("Itens próximos ao vencimento")}
+                >
+                  ⚠️ Vencimentos
+                </Button>
+              </div>
+            </div>
+
             {/* Input Area */}
             <div className="border-t border-border p-4">
               <div className="flex gap-2">
@@ -336,9 +354,6 @@ export default function AIAssistant() {
                   <Send className="h-4 w-4" />
                 </Button>
               </div>
-              <p className="text-xs text-muted-foreground mt-2 text-center">
-                O assistente pode analisar dados, gerar relatórios e sugerir ações estratégicas
-              </p>
             </div>
           </Card>
         </main>

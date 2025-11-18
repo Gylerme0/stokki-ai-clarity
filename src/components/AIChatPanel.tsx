@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Sparkles, Send, X } from "lucide-react";
+import { Sparkles, Send, X, Maximize2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
 
 interface Message {
   role: "user" | "assistant";
@@ -55,12 +56,20 @@ export const AIChatPanel = ({ isOpen, onClose }: AIChatPanelProps) => {
           <Sparkles className="h-5 w-5" />
           <h3 className="font-medium">Assistente IA</h3>
         </div>
-        <button
-          onClick={onClose}
-          className="hover:bg-primary-hover rounded p-1 transition-colors"
-        >
-          <X className="h-4 w-4" />
-        </button>
+        <div className="flex items-center gap-1">
+          <Link
+            to="/assistente-ia"
+            className="hover:bg-primary/20 rounded p-1 transition-colors"
+          >
+            <Maximize2 className="h-4 w-4" />
+          </Link>
+          <button
+            onClick={onClose}
+            className="hover:bg-primary/20 rounded p-1 transition-colors"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
       </div>
 
       {/* Messages */}
@@ -80,6 +89,30 @@ export const AIChatPanel = ({ isOpen, onClose }: AIChatPanelProps) => {
         ))}
       </div>
 
+      {/* Suggestions */}
+      <div className="px-4 pb-2">
+        <div className="flex gap-2 overflow-x-auto pb-2">
+          <button
+            onClick={() => setInput("Relatório de estoque")}
+            className="px-3 py-1.5 text-xs bg-secondary/10 hover:bg-secondary/20 text-foreground rounded-full whitespace-nowrap transition-colors"
+          >
+            📊 Relatório
+          </button>
+          <button
+            onClick={() => setInput("Estoque baixo")}
+            className="px-3 py-1.5 text-xs bg-secondary/10 hover:bg-secondary/20 text-foreground rounded-full whitespace-nowrap transition-colors"
+          >
+            📦 Estoque baixo
+          </button>
+          <button
+            onClick={() => setInput("Análise mensal")}
+            className="px-3 py-1.5 text-xs bg-secondary/10 hover:bg-secondary/20 text-foreground rounded-full whitespace-nowrap transition-colors"
+          >
+            📈 Análise
+          </button>
+        </div>
+      </div>
+
       {/* Input */}
       <div className="p-4 border-t border-border bg-background">
         <div className="flex gap-2">
@@ -89,7 +122,7 @@ export const AIChatPanel = ({ isOpen, onClose }: AIChatPanelProps) => {
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={(e) => e.key === "Enter" && handleSend()}
             placeholder="Pergunte sobre seu estoque..."
-            className="flex-1 px-3 py-2 text-sm border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-accent"
+            className="flex-1 px-3 py-2 text-sm border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-accent bg-background text-foreground"
           />
           <button
             onClick={handleSend}
