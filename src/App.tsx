@@ -7,6 +7,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
+import AIAssistant from "./pages/AIAssistant";
 import CadastrosHub from "./pages/CadastrosHub";
 import MovimentacoesHub from "./pages/MovimentacoesHub";
 import OrdensHub from "./pages/OrdensHub";
@@ -44,6 +45,7 @@ const App = () => (
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+            <Route path="/assistente-ia" element={<ProtectedRoute><AIAssistant /></ProtectedRoute>} />
           
             {/* Cadastros */}
             <Route path="/cadastros" element={<ProtectedRoute><CadastrosHub /></ProtectedRoute>} />
