@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Sidebar } from "@/components/Sidebar";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
@@ -8,18 +8,80 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Pencil, Trash2, Plus } from "lucide-react";
 import { toast } from "sonner";
+import { useDatabase } from "@/hooks/useDatabase";
 
 export default function Categorias() {
-  const [categories, setCategories] = useState([
-    { id: 1, name: "Fixação", description: "Parafusos, porcas, arruelas" },
-    { id: 2, name: "Ferramentas", description: "Ferramentas manuais e elétricas" },
-    { id: 3, name: "Elétrica", description: "Componentes elétricos" },
-  ]);
+  const { loading, executeQuery, executeUpdate } = useDatabase();
+  const [categories, setCategories] = useState<any[]>([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<any>(null);
+  const [formData, setFormData] = useState({ name: "", description: "" });
+
+  const loadCategories = () => {
+    if (!loading) {
+      const results = executeQuery("SELECT * FROM categorias ORDER BY id");
+      setCategories(results);
+    }
+  };
+
+  useEffect(() => {
+    loadCategories();
+  }, [loading]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (editingCategory) {
+      executeUpdate(
+        "UPDATE categorias SET name = ?, description = ? WHERE id = ?",
+        [formData.name, formData.description, editingCategory.id]
+      );
+      toast.success("Categoria atualizada com sucesso!");
+    } else {
+      executeUpdate(
+        "INSERT INTO categorias (name, description) VALUES (?, ?)",
+        [formData.name, formData.description]
+      );
+      toast.success("Categoria criada com sucesso!");
+    }
+    loadCategories();
+    setIsDialogOpen(false);
+    setFormData({ name: "", description: "" });
+    setEditingCategory(null);
+  };
+
+  const handleEdit = (category: any) => {
+    setEditingCategory(category);
+    setFormData({ name: category.name, description: category.description || "" });
+    setIsDialogOpen(true);
+  };
 
   const handleDelete = (id: number) => {
-    setCategories(categories.filter(c => c.id !== id));
+    executeUpdate("DELETE FROM categorias WHERE id = ?", [id]);
     toast.success("Categoria excluída com sucesso!");
+    loadCategories();
   };
+
+  const handleDialogChange = (open: boolean) => {
+    setIsDialogOpen(open);
+    if (!open) {
+      setFormData({ name: "", description: "" });
+      setEditingCategory(null);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen bg-background">
+        <Sidebar />
+        <div className="flex-1 ml-64">
+          <Header title="Gestão de Categorias" />
+          <main className="p-8">
+            <div className="text-center">Carregando...</div>
+          </main>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -29,7 +91,7 @@ export default function Categorias() {
         <main className="p-8">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-semibold">Categorias</h2>
-            <Dialog>
+            <Dialog open={isDialogOpen} onOpenChange={handleDialogChange}>
               <DialogTrigger asChild>
                 <Button>
                   <Plus className="h-4 w-4 mr-2" />
@@ -38,20 +100,37 @@ export default function Categorias() {
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Criar Nova Categoria</DialogTitle>
+                  <DialogTitle>
+                    {editingCategory ? "Editar Categoria" : "Criar Nova Categoria"}
+                  </DialogTitle>
                 </DialogHeader>
-                <form className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="name">Nome da Categoria *</Label>
-                    <Input id="name" placeholder="Ex: Fixação" required />
+                    <Input
+                      id="name"
+                      placeholder="Ex: Fixação"
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="description">Descrição</Label>
-                    <Input id="description" placeholder="Ex: Parafusos, porcas, arruelas" />
+                    <Input
+                      id="description"
+                      placeholder="Ex: Parafusos, porcas, arruelas"
+                      value={formData.description}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    />
                   </div>
                   <div className="flex justify-end gap-2">
-                    <Button type="button" variant="outline">Cancelar</Button>
-                    <Button type="submit">Salvar Categoria</Button>
+                    <Button type="button" variant="outline" onClick={() => handleDialogChange(false)}>
+                      Cancelar
+                    </Button>
+                    <Button type="submit">
+                      {editingCategory ? "Atualizar" : "Salvar"} Categoria
+                    </Button>
                   </div>
                 </form>
               </DialogContent>
@@ -73,7 +152,7 @@ export default function Categorias() {
                     <TableCell className="font-medium">{category.name}</TableCell>
                     <TableCell>{category.description}</TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={() => handleEdit(category)}>
                         <Pencil className="h-4 w-4" />
                       </Button>
                       <Button 

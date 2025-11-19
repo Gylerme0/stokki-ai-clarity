@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Sidebar } from "@/components/Sidebar";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
@@ -8,18 +8,80 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Pencil, Trash2, Plus } from "lucide-react";
 import { toast } from "sonner";
+import { useDatabase } from "@/hooks/useDatabase";
 
 export default function Unidades() {
-  const [units, setUnits] = useState([
-    { id: 1, code: "UN", name: "Unidade", description: "Unidade individual" },
-    { id: 2, code: "KG", name: "Quilograma", description: "Medida de peso" },
-    { id: 3, code: "M", name: "Metro", description: "Medida de comprimento" },
-  ]);
+  const { loading, executeQuery, executeUpdate } = useDatabase();
+  const [units, setUnits] = useState<any[]>([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingUnit, setEditingUnit] = useState<any>(null);
+  const [formData, setFormData] = useState({ code: "", name: "", description: "" });
+
+  const loadUnits = () => {
+    if (!loading) {
+      const results = executeQuery("SELECT * FROM unidades ORDER BY id");
+      setUnits(results);
+    }
+  };
+
+  useEffect(() => {
+    loadUnits();
+  }, [loading]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (editingUnit) {
+      executeUpdate(
+        "UPDATE unidades SET code = ?, name = ?, description = ? WHERE id = ?",
+        [formData.code, formData.name, formData.description, editingUnit.id]
+      );
+      toast.success("Unidade atualizada com sucesso!");
+    } else {
+      executeUpdate(
+        "INSERT INTO unidades (code, name, description) VALUES (?, ?, ?)",
+        [formData.code, formData.name, formData.description]
+      );
+      toast.success("Unidade criada com sucesso!");
+    }
+    loadUnits();
+    setIsDialogOpen(false);
+    setFormData({ code: "", name: "", description: "" });
+    setEditingUnit(null);
+  };
+
+  const handleEdit = (unit: any) => {
+    setEditingUnit(unit);
+    setFormData({ code: unit.code, name: unit.name, description: unit.description || "" });
+    setIsDialogOpen(true);
+  };
 
   const handleDelete = (id: number) => {
-    setUnits(units.filter(u => u.id !== id));
+    executeUpdate("DELETE FROM unidades WHERE id = ?", [id]);
     toast.success("Unidade excluída com sucesso!");
+    loadUnits();
   };
+
+  const handleDialogChange = (open: boolean) => {
+    setIsDialogOpen(open);
+    if (!open) {
+      setFormData({ code: "", name: "", description: "" });
+      setEditingUnit(null);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen bg-background">
+        <Sidebar />
+        <div className="flex-1 ml-64">
+          <Header title="Gestão de Unidades de Medida" />
+          <main className="p-8">
+            <div className="text-center">Carregando...</div>
+          </main>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -29,7 +91,7 @@ export default function Unidades() {
         <main className="p-8">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-semibold">Unidades de Medida</h2>
-            <Dialog>
+            <Dialog open={isDialogOpen} onOpenChange={handleDialogChange}>
               <DialogTrigger asChild>
                 <Button>
                   <Plus className="h-4 w-4 mr-2" />
@@ -38,24 +100,47 @@ export default function Unidades() {
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Criar Nova Unidade</DialogTitle>
+                  <DialogTitle>
+                    {editingUnit ? "Editar Unidade" : "Criar Nova Unidade"}
+                  </DialogTitle>
                 </DialogHeader>
-                <form className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="code">Código *</Label>
-                    <Input id="code" placeholder="Ex: UN" required />
+                    <Input
+                      id="code"
+                      placeholder="Ex: UN"
+                      required
+                      value={formData.code}
+                      onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="name">Nome *</Label>
-                    <Input id="name" placeholder="Ex: Unidade" required />
+                    <Input
+                      id="name"
+                      placeholder="Ex: Unidade"
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="description">Descrição</Label>
-                    <Input id="description" placeholder="Ex: Unidade individual" />
+                    <Input
+                      id="description"
+                      placeholder="Ex: Unidade individual"
+                      value={formData.description}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    />
                   </div>
                   <div className="flex justify-end gap-2">
-                    <Button type="button" variant="outline">Cancelar</Button>
-                    <Button type="submit">Salvar Unidade</Button>
+                    <Button type="button" variant="outline" onClick={() => handleDialogChange(false)}>
+                      Cancelar
+                    </Button>
+                    <Button type="submit">
+                      {editingUnit ? "Atualizar" : "Salvar"} Unidade
+                    </Button>
                   </div>
                 </form>
               </DialogContent>
@@ -79,7 +164,7 @@ export default function Unidades() {
                     <TableCell>{unit.name}</TableCell>
                     <TableCell>{unit.description}</TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" onClick={() => handleEdit(unit)}>
                         <Pencil className="h-4 w-4" />
                       </Button>
                       <Button 
